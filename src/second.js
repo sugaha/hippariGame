@@ -14,8 +14,8 @@ var bonus=9999;
 var cocos_box;
 var arrow_node;
 var arrow_line;
-var debug_label1;
-var debug_label2;
+//var debug_label1;
+//var debug_label2;
 if (typeof SpriteTag == "undefined") {
    var SpriteTag = {};
    SpriteTag.totem = 0; // トーテム
@@ -177,7 +177,7 @@ var gameScene2 = cc.Scene.extend({
       dY = endTouch.y - startTouch.y;
       dZ = Math.sqrt(dX * dX + dY * dY);
 
-      debug_label1.setString(Math.floor(dZ * Math.pow(10, 2)) / Math.pow(10, 2));
+      //debug_label1.setString(Math.floor(dZ * Math.pow(10, 2)) / Math.pow(10, 2));
 
       //ドラックした距離が閾値（しきい値）をこえたら、矢印を表示する
       if (dZ > 60) {
@@ -198,7 +198,7 @@ var gameScene2 = cc.Scene.extend({
          arrow_line.drawSegment(cc.p(pos.x, pos.y),
             cc.p(endTouch.x, endTouch.y), 1,
             new cc.Color(255, 255, 255, 64));
-         debug_label2.setString(Math.floor(angle * Math.pow(10, 2)) / Math.pow(10, 2));
+         //debug_label2.setString(Math.floor(angle * Math.pow(10, 2)) / Math.pow(10, 2));
 
          //ドラックした長さを矢印のしっぽの位置にする
          var points = [new cc.Point(0, 0),
@@ -232,9 +232,9 @@ var game2 = cc.Layer.extend({
         //this.addChild(backgroundLayer);
         world = new cp.Space();
         world.gravity = cp.v(0, -100);
-        var debugDraw = cc.PhysicsDebugNode.create(world);
-        debugDraw.setVisible(true);
-        this.addChild(debugDraw);
+        //var debugDraw = cc.PhysicsDebugNode.create(world);
+        //debugDraw.setVisible(true);
+        //this.addChild(debugDraw);
 
 
         var wallBottom = new cp.SegmentShape(world.staticBody,
@@ -376,7 +376,7 @@ var touchListener = cc.EventListener.create({
 });
 
 function idouR2(){
-  cc.director.runScene(new SecondScene());
+  cc.director.runScene(new gameScene2());
 }
 
 function idouT(){

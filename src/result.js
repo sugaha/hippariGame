@@ -8,10 +8,7 @@ var OverLayer = cc.Layer.extend({
         //音楽再生エンジン
         audioEngine = cc.audioEngine;
         //bgm再生
-        if (!audioEngine.isMusicPlaying()) {
-          //audioEngine.playMusic("res/bgm_main.mp3", true);
-          //audioEngine.playMusic(res.umi2_mp3, true);
-        }
+        audioEngine.playEffect(res.over_wav);
 
 /*
                 var OverBG = cc.Sprite.create(res.GOBG_png);
@@ -57,6 +54,7 @@ var OverLayer = cc.Layer.extend({
     },
     onTouchMoved: function(touch, event) {},
     onTouchEnded: function(touch, event) {
+        audioEngine.playEffect(res.kettei);
         // 次のシーンに切り替える
         cc.director.runScene(new SelectScene());
         if (audioEngine.isMusicPlaying()) {

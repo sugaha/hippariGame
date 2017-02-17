@@ -41,6 +41,12 @@ var gameScene = cc.Scene.extend({
               BG.setScale(1);
               this.addChild(BG, 0);
 
+              if (!audioEngine.isMusicPlaying()) {
+                //audioEngine.playMusic("res/bgm_main.mp3", true);
+                audioEngine.playMusic(res.yasei_mp3, true);
+              }
+
+
       //debug_label1 = cc.LabelTTF.create("クリックして", "Arial", 26);
       //debug_label1.setPosition(size.width / 2, size.height * 0.7);
       //this.addChild(debug_label1, 1);
@@ -84,6 +90,9 @@ var gameScene = cc.Scene.extend({
 
               if (keyCode == 84)  // t-Keyでタイトル
                   idouT();
+                  if (audioEngine.isMusicPlaying()) {
+                    audioEngine.stopMusic();
+                  }
               },
 
           },this);
@@ -140,6 +149,7 @@ var gameScene = cc.Scene.extend({
      touching = true;
   },
   onTouchEnded: function(touch, event) {
+     audioEngine.playEffect(res.nage);
      endTouch = touch.getLocation();
      touching = false;
 
@@ -150,6 +160,9 @@ var gameScene = cc.Scene.extend({
      shape.body.applyImpulse(cp.v(dX * -2.3,dY * -2.3), cp.v(10, 10));
 
      if(miss < 0){
+       if (audioEngine.isMusicPlaying()) {
+         audioEngine.stopMusic();
+       }
        cc.director.runScene(new OverScene());
        miss = 5;
      }
@@ -232,9 +245,9 @@ var game = cc.Layer.extend({
         //this.addChild(backgroundLayer);
         world = new cp.Space();
         world.gravity = cp.v(0, -100);
-        var debugDraw = cc.PhysicsDebugNode.create(world);
-        debugDraw.setVisible(true);
-        this.addChild(debugDraw);
+        //var debugDraw = cc.PhysicsDebugNode.create(world);
+        //debugDraw.setVisible(true);
+        //this.addChild(debugDraw);
 
 
         var wallBottom = new cp.SegmentShape(world.staticBody,
@@ -315,12 +328,18 @@ var game = cc.Layer.extend({
            cc.audioEngine.playEffect(res.landing_mp3);
         }
         if(arbiter.a.name== SpriteTag.totem && arbiter.b.name== SpriteTag.target ) {
+          if (audioEngine.isMusicPlaying()) {
+            audioEngine.stopMusic();
+          }
           cc.director.runScene(new ClearScene());
-           cc.audioEngine.playEffect(res.landing_mp3);
+           //cc.audioEngine.playEffect(res.landing_mp3);
         }
         if(arbiter.a.name== SpriteTag.totem && arbiter.b.name== SpriteTag.out ) {
+          if (audioEngine.isMusicPlaying()) {
+            audioEngine.stopMusic();
+          }
           cc.director.runScene(new OverScene());
-           cc.audioEngine.playEffect(res.landing_mp3);
+           //cc.audioEngine.playEffect(res.landing_mp3);
         }
         return true;
     },
@@ -374,22 +393,3 @@ function idou(){
 function idouT(){
   cc.director.runScene(new TitleScene());
 }
-
-
-/*
-var touchListener = cc.EventListener.create({
-    event: cc.EventListener.TOUCH_ONE_BY_ONE,
-    onTouchBegan: function (touch, event) {
-        for(var i=shapeArray.length-1;i>=0;i--){
-            if(shapeArray[i].pointQuery(cp.v(touch.getLocation().x,touch.getLocation().y))!=undefined){
-                if(shapeArray[i].name== SpriteTag.destroyable ){
-                    gameLayer.removeChild(shapeArray[i].image);
-                    world.removeBody(shapeArray[i].getBody())
-                    world.removeShape(shapeArray[i])
-                    shapeArray.splice(i,1);
-                }
-            }
-        }
-    }
-});
-*/

@@ -44,16 +44,19 @@ var SelectLayer = cc.Layer.extend({
 
                 var icon1 = cc.Sprite.create(res.icon1);
                 icon1.setPosition(size.width / 12, size.height /1.42);
+                icon1.runAction(cc.repeatForever(cc.Blink.create(2,1)));
                 icon1.setScale(1.5);
                 this.addChild(icon1, 2);
 
                 var icon2 = cc.Sprite.create(res.icon2);
                 icon2.setPosition(size.width / 1.8, size.height /2.5);
+                icon2.runAction(cc.repeatForever(cc.Blink.create(2,1)));
                 icon2.setScale(1.5);
                 this.addChild(icon2, 2);
 
                 var icon3 = cc.Sprite.create(res.icon3);
                 icon3.setPosition(size.width / 1.7, size.height /1.1);
+                icon3.runAction(cc.repeatForever(cc.Blink.create(2,1)));
                 icon3.setScale(1.5);
                 this.addChild(icon3, 2);
 
@@ -88,6 +91,11 @@ var SelectLayer = cc.Layer.extend({
                 moji3.setColor(color);
                 this.addChild(moji3, 2);
 
+                if (!audioEngine.isMusicPlaying()) {
+                  //audioEngine.playMusic("res/bgm_main.mp3", true);
+                  audioEngine.playMusic(res.select_mp3, true);
+                }
+
 
 /*
                 var replay = cc.Sprite.create(res.replay_button_pressed_png);
@@ -101,8 +109,12 @@ var SelectLayer = cc.Layer.extend({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed: function(keyCode, event) {
 
-            if (keyCode == 65)  // a-Keyで左に移動
+            if (keyCode == 65)  // a-Keyで1に移動
+            audioEngine.playEffect(res.pika_wav);
                 idou();
+            if (audioEngine.isMusicPlaying()) {
+                audioEngine.stopMusic();
+            }
             },
 
         },this);
@@ -110,7 +122,7 @@ var SelectLayer = cc.Layer.extend({
         cc.eventManager.addListener({
             event: cc.EventListener.KEYBOARD,
             onKeyPressed: function(keyCode, event) {
-
+            audioEngine.playEffect(res.rapu_wav);
             if (keyCode == 66)  // b-Keyで左に移動
                 idou2();
             }
@@ -136,9 +148,7 @@ var SelectLayer = cc.Layer.extend({
     onTouchEnded: function(touch, event) {
         // 次のシーンに切り替える
         //cc.director.runScene(new gameScene());
-        if (audioEngine.isMusicPlaying()) {
-          audioEngine.stopMusic();
-        }
+
     },
 });
 
@@ -146,11 +156,15 @@ var SelectLayer = cc.Layer.extend({
 
 
 function idou(){
-  cc.director.runScene(new gameScene());
+  nextScene = cc.TransitionFade.create(2, new gameScene());
+  cc.director.runScene(nextScene)
+  //cc.director.runScene(new gameScene());
 }
 
 function idou2(){
-  cc.director.runScene(new gameScene2());
+  nextScene = cc.TransitionFade.create(2, new gameScene2());
+  cc.director.runScene(nextScene)
+  //cc.director.runScene(new gameScene2());
 }
 
 var SelectScene = cc.Scene.extend({

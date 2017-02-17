@@ -6,8 +6,16 @@ var res = {
     brick4x2_png : "res/brick4x2.png",
     ground_png : "res/ground.png",
     ground2_png : "res/ground2.png",
-    totem_png : "res/totem.png",
-    landing_mp3 : "res/landing.mp3",
+    landing_mp3 : "res/BGM/landing.mp3",
+    yasei_mp3 : "res/BGM/yasei.mp3",
+    title_wav:"res/BGM/title.wav",
+    select_mp3:"res/BGM/select.mp3",
+    kettei : "res/BGM/kettei.wav",
+    pika_wav : "res/BGM/pika.wav",
+    rapu_wav : "res/BGM/rapu.wav",
+    nage :"res/BGM/nage.wav",
+    clear_wav:"res/BGM/clear.wav",
+    over_wav:"res/BGM/over.wav",
     ball_png : "res/playerBall.png",
     kusa1: "res/dot/kusa1.png",
     kusa2: "res/dot/kusa2.png",
@@ -32,7 +40,8 @@ var res = {
     map:"res/map.jpg",
     haikei2:"res/haikei2.jpg",
     saku:"res/dot/saku2.png",
-    kumo:"res/kumo.png"
+    kumo:"res/kumo.png",
+    logo:"res/logo.png"
 
 };
 

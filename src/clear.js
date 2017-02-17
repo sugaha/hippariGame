@@ -8,10 +8,12 @@ var ClearLayer = cc.Layer.extend({
         //音楽再生エンジン
         audioEngine = cc.audioEngine;
         //bgm再生
-        if (!audioEngine.isMusicPlaying()) {
+        audioEngine.playEffect(res.clear_wav);
+
+        //if (!audioEngine.isMusicPlaying()) {
           //audioEngine.playMusic("res/bgm_main.mp3", true);
           //audioEngine.playMusic(res.umi2_mp3, true);
-        }
+        //}
 
 /*
                 var OverBG = cc.Sprite.create(res.GOBG_png);
@@ -79,6 +81,7 @@ var ClearLayer = cc.Layer.extend({
     onTouchEnded: function(touch, event) {
         // 次のシーンに切り替える
         cc.director.runScene(new SelectScene());
+        audioEngine.playEffect(res.pika_wav);
         if (audioEngine.isMusicPlaying()) {
           audioEngine.stopMusic();
         }
