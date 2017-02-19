@@ -14,8 +14,7 @@ var bonus=9999;
 var cocos_box;
 var arrow_node;
 var arrow_line;
-//var debug_label1;
-//var debug_label2;
+
 if (typeof SpriteTag == "undefined") {
    var SpriteTag = {};
    SpriteTag.totem = 0; // トーテム
@@ -40,13 +39,12 @@ var gameScene2 = cc.Scene.extend({
               BG.setPosition(size.width / 2, size.height /2);
               BG.setScale(1);
               this.addChild(BG, 0);
-/*
-      debug_label1 = cc.LabelTTF.create("クリックして", "Arial", 26);
-      debug_label1.setPosition(size.width / 2, size.height * 0.7);
-      this.addChild(debug_label1, 1);
-      debug_label2 = cc.LabelTTF.create("引っ張って下さい", "Arial", 26);
-      debug_label2.setPosition(size.width / 2, size.height * 0.6);
-      this.addChild(debug_label2, 1);*/
+
+              if (!audioEngine.isMusicPlaying()) {
+                //audioEngine.playMusic("res/bgm_main.mp3", true);
+                audioEngine.playMusic(res.yasei_mp3, true);
+              }
+
       label1 = cc.Sprite.create(res.lv2);
        label1.setPosition(size.width / 7, size.height * 0.93);
        this.addChild(label1, 1);
@@ -83,6 +81,9 @@ var gameScene2 = cc.Scene.extend({
               onKeyPressed: function(keyCode, event) {
 
               if (keyCode == 84)  // t-Keyでタイトル
+              if (audioEngine.isMusicPlaying()) {
+                audioEngine.stopMusic();
+              }
                   idouT();
               },
 
@@ -140,6 +141,7 @@ var gameScene2 = cc.Scene.extend({
      touching = true;
   },
   onTouchEnded: function(touch, event) {
+     audioEngine.playEffect(res.nage);
      endTouch = touch.getLocation();
      touching = false;
 
@@ -150,6 +152,9 @@ var gameScene2 = cc.Scene.extend({
      shape.body.applyImpulse(cp.v(dX * -2.3,dY * -2.3), cp.v(10, 10));
 
      if(miss < 0){
+       if (audioEngine.isMusicPlaying()) {
+         audioEngine.stopMusic();
+       }
        cc.director.runScene(new OverScene());
        miss = 5;
      }
@@ -177,7 +182,6 @@ var gameScene2 = cc.Scene.extend({
       dY = endTouch.y - startTouch.y;
       dZ = Math.sqrt(dX * dX + dY * dY);
 
-      //debug_label1.setString(Math.floor(dZ * Math.pow(10, 2)) / Math.pow(10, 2));
 
       //ドラックした距離が閾値（しきい値）をこえたら、矢印を表示する
       if (dZ > 60) {
@@ -228,13 +232,9 @@ var gameScene2 = cc.Scene.extend({
 var game2 = cc.Layer.extend({
     init:function () {
         this._super();
-        //var backgroundLayer = cc.LayerGradient.create(cc.color(0xdf,0x9f,0x83,255),cc.color(0xfa,0xf7,0x9f,255));
-        //this.addChild(backgroundLayer);
+
         world = new cp.Space();
         world.gravity = cp.v(0, -100);
-        //var debugDraw = cc.PhysicsDebugNode.create(world);
-        //debugDraw.setVisible(true);
-        //this.addChild(debugDraw);
 
 
         var wallBottom = new cp.SegmentShape(world.staticBody,
@@ -244,14 +244,7 @@ var game2 = cc.Layer.extend({
         world.addStaticShape(wallBottom);
 
 
-        // this.addBody(240,10,480,20,false,res.ground_png,"ground");
-        // this.addBody(204,32,24,24,true,res.brick1x1_png,"destroyable");
-        // this.addBody(276,32,24,24,true,res.brick1x1_png,"destroyable");
-        // this.addBody(240,56,96,24,true,res.brick4x1_png,"destroyable");
-        // this.addBody(240,80,48,24,true,res.brick2x1_png,"solid");
-        // this.addBody(228,104,72,24,true,res.brick3x1_png,"destroyable");
-        // this.addBody(240,140,96,48,true,res.brick4x2_png,"solid");
-        // this.addBody(240,188,24,48,true,res.totem_png,"totem");
+
 
         this.addBody(60,188,24,28,true,res.ball_png,SpriteTag.totem);
         this.addBody(240,10,480,20,false,res.ground2_png,SpriteTag.ground);
@@ -313,22 +306,22 @@ var game2 = cc.Layer.extend({
         }
     },
     collisionBegin : function (arbiter, space ) {
-      /*
-        if((arbiter.a.name=="totem" && arbiter.b.name=="ground") || (arbiter.b.name=="totem" && arbiter.a.name=="ground")){
-            console.log("Oh no!!!!");
-        }
-        */
+
 
         if(arbiter.a.name== SpriteTag.totem && arbiter.b.name== SpriteTag.ground ) {
            cc.audioEngine.playEffect(res.landing_mp3);
         }
         if(arbiter.a.name== SpriteTag.totem && arbiter.b.name== SpriteTag.target ) {
-          cc.director.runScene(new ClearScene());
-           cc.audioEngine.playEffect(res.landing_mp3);
+          cc.director.runScene(new ClearScene2());
+          if (audioEngine.isMusicPlaying()) {
+            audioEngine.stopMusic();
+          }
         }
         if(arbiter.a.name== SpriteTag.totem && arbiter.b.name== SpriteTag.out ) {
           cc.director.runScene(new OverScene());
-           cc.audioEngine.playEffect(res.landing_mp3);
+          if (audioEngine.isMusicPlaying()) {
+            audioEngine.stopMusic();
+          }
         }
         return true;
     },
@@ -352,23 +345,13 @@ var touchListener = cc.EventListener.create({
             //pointQueryは物理オブジェクトの内側がタップされたかどうか判定する関数
          if (shape.pointQuery(cp.v(pos.x, pos.y)) != undefined) {
             console.log("hit ")
-          /*  if (shape.name == SpriteTag.destroyable) {
-               //ブロックをタップしたときは、消去する
-               world.removeBody(shape.getBody());
-               world.removeShape(shape);
-               gameLayer.removeChild(shape.image);
-               shapeArray.splice(i, 1);
-               console.log("remove block")
-               return;
-            } else*/ if (shape.name == SpriteTag.totem) {
-               // トーテムをタップしたときは、衝撃を与える
-               //shape.body.applyImpulse(cp.v(500, 0), cp.v(0, -20))
+            if (shape.name == SpriteTag.totem) {
+
                return;
             }
          }
       }
-      // 何も無い場所をタップしたときは箱を追加する
-      //gameLayer.addBody(pos.x,pos.y,24,24,true,res.brick1x1_png,SpriteTag.destroyable);
+
       return;
 
    }
@@ -382,21 +365,3 @@ function idouR2(){
 function idouT(){
   cc.director.runScene(new TitleScene());
 }
-
-/*
-var touchListener = cc.EventListener.create({
-    event: cc.EventListener.TOUCH_ONE_BY_ONE,
-    onTouchBegan: function (touch, event) {
-        for(var i=shapeArray.length-1;i>=0;i--){
-            if(shapeArray[i].pointQuery(cp.v(touch.getLocation().x,touch.getLocation().y))!=undefined){
-                if(shapeArray[i].name== SpriteTag.destroyable ){
-                    gameLayer.removeChild(shapeArray[i].image);
-                    world.removeBody(shapeArray[i].getBody())
-                    world.removeShape(shapeArray[i])
-                    shapeArray.splice(i,1);
-                }
-            }
-        }
-    }
-});
-*/

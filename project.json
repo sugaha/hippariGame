@@ -17,6 +17,7 @@
         "src/title.js",
         "src/select.js",
         "src/clear.js",
+        "src/clear2.js",
         "src/second.js"
     ]
 }

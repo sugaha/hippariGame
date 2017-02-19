@@ -32,6 +32,7 @@ var res = {
     lv2:"res/dot/lv2.png",
     haikei:"res/haikei.jpg",
     zukan:"res/zukan.jpg",
+    zukan2:"res/zukan2.png",
     gara:"res/gara.jpg",
     waku2:"res/waku2.png",
     icon1:"res/dot/icon1.png",
